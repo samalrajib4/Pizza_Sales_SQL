@@ -33,10 +33,6 @@ They include:
 - Performing aggregations, filtering, and time-based grouping
 - Translating business questions into SQL logic
 
-## 📷 Optional Screenshots
-
-> *(Add screenshots of output tables or dashboards here if you created any visualizations.)*
-
 ## 📎 Dataset
 
 > A simulated pizza sales dataset commonly used in SQL case studies. *(If you used a specific one, link to it or upload it.)*
