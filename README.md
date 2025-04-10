@@ -1,58 +1,147 @@
- 🍕 Pizza Sales Data Analysis using SQL
+-- Pizza_Sales_Project....
 
-This project showcases my ability to perform business-driven data analysis using SQL. I used a fictional pizza sales dataset to extract insights related to sales performance, customer behavior, and revenue trends. The queries are organized into Basic, Intermediate, and Advanced levels.
 
-## 🚀 Key Highlights
+-- #Start
+-- Retrieve the total number of orders placed.
 
-- Total orders and revenue generated
-- Popular pizza sizes and types
-- Time-based sales patterns (hourly, daily)
-- Category-wise revenue breakdowns
-- Top-performing pizzas by revenue and quantity
-- Cumulative and percentage revenue analysis
+select count(order_id) as Total_orders
+from orders;
 
-## 🧰 Tools Used
+-- Calculate the total revenue generated from pizza sales.
 
-- SQL (MySQL / PostgreSQL / SQLite — specify yours)
-- DB Browser for SQLite / MySQL Workbench / pgAdmin
-- VS Code (for writing queries)
+select round(sum(price*quantity),2) as Total_sales
+from order_details
+left join pizzas
+	on order_details.pizza_id = pizzas.pizza_id;
+    
+-- Identify the highest-priced pizza.
 
-## 🧾 SQL Query Breakdown
+select pizza_types.`name`, pizzas.price
+from pizza_types
+join pizzas
+	on pizza_types.pizza_type_id = pizzas.pizza_type_id
+order by price desc limit 1;
 
-All queries are organized and saved in [`SQL_Queries/pizza_sales_analysis.sql`](SQL_Queries/pizza_sales_analysis.sql).  
+-- Identify the most common pizza size ordered.
 
-They include:
+select pizzas.size, count(order_details.oredr_details_id) Frequently_Ordered_Pizza
+from order_details
+join pizzas
+	on pizzas.pizza_id = order_details.pizza_id
+group by pizzas.size
+order by Frequently_Ordered_Pizza desc limit 1
+;
 
-- ✅ Basic Metrics (Total Orders, Revenue, Most Ordered Size)
-- 📊 Intermediate Analysis (Hourly Trends, Category Orders)
-- 📈 Advanced Analytics (Cumulative Revenue, Category-Wise Leaders)
+-- List the top 5 most ordered pizza types along with their quantities.
 
-## 🧠 What I Learned
+select pizza_types.`name`, sum(order_details.quantity) as Quantities_Ordered
+from pizza_types
+join pizzas
+	on pizza_types.pizza_type_id = pizzas.pizza_type_id
+join order_details
+	on order_details.pizza_id = pizzas.pizza_id
+group by pizza_types.`name`
+order by Quantities_Ordered desc limit 5;
 
-- Writing complex joins, CTEs, and window functions
-- Performing aggregations, filtering, and time-based grouping
-- Translating business questions into SQL logic
+-- Find the total quantity of each pizza category ordered.
 
-## 📎 Dataset
+select pizza_types.category, sum(order_details.quantity) Quantity_Ordered
+from pizza_types
+join pizzas
+	on pizza_types.pizza_type_id = pizzas.pizza_type_id
+join order_details
+	on order_details.pizza_id = pizzas.pizza_id
+group by pizza_types.category
+order by Quantity_Ordered desc;
 
-> A simulated pizza sales dataset commonly used in SQL case studies. *(If you used a specific one, link to it or upload it.)*
+-- Determine the distribution of orders by hour of the day.
 
-## ✅ How to Run
+select hour(order_time), count(order_id)
+from orders
+group by hour(order_time)
+order by hour(order_time);
 
-1. Clone this repo  
-2. Load the dataset into your SQL client  
-3. Open and run queries from `SQL_Queries/pizza_sales_analysis.sql`  
+-- Find the category-wise distribution of pizzas.
 
----
+select category, count(name)
+from pizza_types
+group by(category);
 
-## 🔮 Future Enhancements
+-- Group the orders by date and calculate the average number of pizzas ordered per day.
 
-- Add visual dashboards using Power BI or Tableau  
-- Automate report generation using Python  
-- Build an interactive dashboard to monitor KPIs
+With CTE_Example as
+(
+select orders.order_date, sum(order_details.quantity) as quantity
+from orders
+join order_details
+	on orders.order_id = order_details.order_id
+group by orders.order_date
+)
+select round(avg(quantity),0) as Avg_Pizza_Ordered_per_day
+from CTE_Example;
 
----
+-- Determine the top 3 most ordered pizza types based on revenue.
 
-## 🙌 Thank You!
+select pizza_types.`name`, round(sum(order_details.quantity*pizzas.price),2) as Revenue_generated
+from pizza_types
+join pizzas
+	on pizza_types.pizza_type_id = pizzas.pizza_type_id
+join order_details
+	on order_details.pizza_id = pizzas.pizza_id
+group by pizza_types.`name`
+order by Revenue_generated desc
+limit 3;
+    
+-- Calculate the percentage contribution of each pizza type to total revenue.
 
-Feel free to fork, clone, or star the repo if you found it helpful!
+select pizza_types.category, 
+round(sum(order_details.quantity*pizzas.price)/
+	(select sum(price*quantity) 
+	from order_details
+	join pizzas
+		on order_details.pizza_id = pizzas.pizza_id)*100,2) as Revenue_generated
+from pizza_types
+join pizzas
+	on pizza_types.pizza_type_id = pizzas.pizza_type_id
+join order_details
+	on order_details.pizza_id = pizzas.pizza_id
+group by pizza_types.category
+order by Revenue_generated desc;
+
+-- Analyze the cumulative revenue generated over time.
+
+with CTE_Example as
+(
+select orders.order_date, round(sum(order_details.quantity*pizzas.price),2) as Revenue
+from order_details
+join pizzas
+	on order_details.pizza_id = pizzas.pizza_id
+join orders
+	on orders.order_id = order_details.order_id
+group by orders.order_date
+)
+select order_date,Revenue,
+sum(Revenue) over (order by order_date) as Comulatyive_Revenue
+from CTE_Example;
+
+-- Determine the top 3 most ordered pizza types based on revenue for each pizza category.
+
+select `name`,revenue
+from
+	(select category,`name`,revenue,
+	rank() over(partition by category order by revenue desc) as rn
+	from
+		(select pizza_types.category,pizza_types.`name`,
+        sum(order_details.quantity*pizzas.price) as Revenue
+		from order_details
+		join pizzas
+			on order_details.pizza_id = pizzas.pizza_id
+		join pizza_types
+			on pizza_types.pizza_type_id = pizzas.pizza_type_id
+		group by pizza_types.category, pizza_types.`name`) as A) as B
+		where rn <= 3;
+
+
+
+-- END OF THE PROJECT
+-- THANK YOU
