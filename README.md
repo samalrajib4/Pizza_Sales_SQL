@@ -1,58 +1,67 @@
-# 🍕 Pizza Sales Data Analysis using SQL
+**🍕 SQL Project – Pizza Sales Analysis**
+📌 Objective:
 
-This project showcases my ability to perform business-driven data analysis using SQL. I used a fictional pizza sales dataset to extract insights related to sales performance, customer behavior, and revenue trends. The queries are organized into Basic, Intermediate, and Advanced levels.
+To analyze a pizza sales dataset and extract key business insights using SQL.
+🧠 Key Business Questions Answered:
 
-## 🚀 Key Highlights
+    What is the total number of orders?
 
-- Total orders and revenue generated
-- Popular pizza sizes and types
-- Time-based sales patterns (hourly, daily)
-- Category-wise revenue breakdowns
-- Top-performing pizzas by revenue and quantity
-- Cumulative and percentage revenue analysis
+    How much total revenue was generated?
 
-## 🧰 Tools Used
+    Which pizza is the most expensive?
 
-- SQL (MySQL / PostgreSQL / SQLite — specify yours)
-- DB Browser for SQLite / MySQL Workbench / pgAdmin
-- VS Code (for writing queries)
+    What’s the most common pizza size ordered?
 
-## 🧾 SQL Query Breakdown
+    Which are the top 5 most ordered pizza types?
 
-All queries are organized and saved in [`SQL_Queries/pizza_sales_analysis.sql`](SQL_Queries/pizza_sales_analysis.sql).  
+    How many pizzas were sold by category?
 
-They include:
+    What’s the distribution of orders by hour?
 
-- ✅ Basic Metrics (Total Orders, Revenue, Most Ordered Size)
-- 📊 Intermediate Analysis (Hourly Trends, Category Orders)
-- 📈 Advanced Analytics (Cumulative Revenue, Category-Wise Leaders)
+    How do pizza sales vary by category and type?
 
-## 🧠 What I Learned
+    What is the average number of pizzas ordered per day?
 
-- Writing complex joins, CTEs, and window functions
-- Performing aggregations, filtering, and time-based grouping
-- Translating business questions into SQL logic
+    Which pizza types generated the most revenue?
 
-## 📎 Dataset
+    What’s each category's percentage contribution to total revenue?
 
-> A simulated pizza sales dataset commonly used in SQL case studies. 
+    How does cumulative revenue grow over time?
 
-## ✅ How to Run
+    What are the top 3 revenue-generating pizzas in each category?
 
-1. Clone this repo  
-2. Load the dataset into your SQL client  
-3. Open and run queries from `SQL_Queries/pizza_sales_analysis.sql`  
+🛠 SQL Skills Applied:
 
----
+    Joins across multiple tables
 
-## 🔮 Future Enhancements
+    Aggregation & Grouping
 
-- Add visual dashboards using Power BI or Tableau  
-- Automate report generation using Python  
-- Build an interactive dashboard to monitor KPIs
+    Common Table Expressions (CTEs)
 
----
+    Window Functions (RANK, SUM OVER)
 
-## 🙌 Thank You!
+    Subqueries and Date functions
 
-Feel free to fork, clone, or star the repo if you found it helpful!
+📂 Dataset:
+
+The dataset includes:
+
+    orders: order ID, order date & time
+
+    order_details: product quantity and order references
+
+    pizzas: pricing and pizza IDs
+
+    pizza_types: pizza names, categories, and ingredients
+
+🔍 Conclusion:
+
+The project helped uncover useful business insights such as:
+
+    Peak sales hours and top-selling products
+
+    Most profitable pizza types by revenue
+
+    Category performance trends
+
+    Cumulative sales growth for business planning
